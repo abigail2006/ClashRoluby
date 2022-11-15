@@ -5,7 +5,7 @@ from urllib.request import Request, urlopen
 #import login
 from functools import partial
 #from itertools import cycle
-
+from soqeteServer import Servidor
 #l = login.Login()
 
 class Pantalla:
@@ -64,7 +64,7 @@ class Pantalla:
         boton3.pack()
         self.boton4 = tkinter.Button(f6, text = "Rendirse", command = partial(self.jugar_mano, self.j1.rendirse, None), padx = 15, pady = 10, bg = "mediumorchid1")
         self.boton4.pack()
-        boton5 = tkinter.Button(self.f1, text = "Servidor", padx = 35.59, pady = 10, bg = "mediumorchid1")
+        boton5 = tkinter.Button(self.f1, text = "Servidor", padx = 35.59, pady = 10, bg = "mediumorchid1", command = self.crear_servidor)
         boton5.grid(column=0, row=0)
         boton6 = tkinter.Button(self.f1, text = "Cliente", padx = 35.59, pady = 10, bg = "mediumorchid1")
         boton6.grid(column=1, row=0)
@@ -115,6 +115,12 @@ class Pantalla:
             label.config(image=self.photo)
         else:
             label.config(image=self.photo2)
+            
+    def crear_servidor(self):
+        self.modo = Servidor()
+        self.etiqueta7.config (text = f"IP: {self.modo.MiIP}")
+        self.etiqueta8.config (text = f"Puerto: {self.modo.Port}")
+        self.modo.abrir_conexion()
     
 class Jugador:
     def __init__(self):
