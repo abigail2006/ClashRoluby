@@ -6,6 +6,7 @@ from urllib.request import Request, urlopen
 from functools import partial
 #from itertools import cycle
 from soqeteServer import Servidor
+from soqueteClient import Cliente
 #l = login.Login()
 
 class Pantalla:
@@ -27,8 +28,8 @@ class Pantalla:
         f12.grid(column=0, row=0)
         f13 = tkinter.Frame(f2)
         f13.grid(column=1, row=0)
-        f3 = tkinter.Frame(self.ventana, bg = "thistle")
-        f3.grid(column=1, row=0, sticky=tkinter.W)
+        self.f3 = tkinter.Frame(self.ventana, bg = "thistle")
+        self.f3.grid(column=1, row=0, sticky=tkinter.W)
         
         self.f4 = tkinter.Frame(self.ventana, bg = "thistle")
         self.f4.grid(column=0, row=1)
@@ -66,7 +67,7 @@ class Pantalla:
         self.boton4.pack()
         boton5 = tkinter.Button(self.f1, text = "Servidor", padx = 35.59, pady = 10, bg = "mediumorchid1", command = self.crear_servidor)
         boton5.grid(column=0, row=0)
-        boton6 = tkinter.Button(self.f1, text = "Cliente", padx = 35.59, pady = 10, bg = "mediumorchid1")
+        boton6 = tkinter.Button(self.f1, text = "Cliente", padx = 35.59, pady = 10, bg = "mediumorchid1",  command = self.crear_cliente)
         boton6.grid(column=1, row=0)
         
         self.etiqueta1 = tkinter.Label(self.f9, text = f'NOMBRE: {self.j1.nombre}', bg = "thistle")
@@ -81,9 +82,9 @@ class Pantalla:
         self.etiqueta5.pack()
         self.etiqueta6 = tkinter.Label(self.f11, text = "", bg = "thistle")
         self.etiqueta6.pack()
-        self.etiqueta7 = tkinter.Label(f3, text = "IP: ", bg = "thistle")
+        self.etiqueta7 = tkinter.Label(self.f3, text = "IP: ", bg = "thistle")
         self.etiqueta7.grid(column=0, row=0)
-        self.etiqueta8 = tkinter.Label(f3, text = "Puerto: ", bg = "thistle")
+        self.etiqueta8 = tkinter.Label(self.f3, text = "Puerto: ", bg = "thistle")
         self.etiqueta8.grid(column=0, row=1)
         
         self.ventana.mainloop()
@@ -121,6 +122,24 @@ class Pantalla:
         self.etiqueta7.config (text = f"IP: {self.modo.MiIP}")
         self.etiqueta8.config (text = f"Puerto: {self.modo.Port}")
         self.modo.abrir_conexion()
+        
+    def crear_cliente(self):
+        self.IPentry = tkinter.Entry(self.f3)
+        self.IPentry.grid(column=1, row=0)
+        self.Puertoentry = tkinter.Entry(self.f3)
+        self.Puertoentry.grid(column=1, row=1)
+        self.botonConectar = tkinter.Button(self.f3, text="Conectar", command=self.conectar)
+        self.botonConectar.grid(column=2, row=0)
+    
+    def conectar(self):
+        ip = self.IPentry.get()
+        puerto = int(self.Puertoentry.get())
+        print(ip, type(puerto))
+        if ip and puerto:
+            self.modo = Cliente(ip, puerto)
+            self.modo.conectar()
+        else:
+            print("ingrese ip y puerto")
     
 class Jugador:
     def __init__(self):
