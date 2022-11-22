@@ -7,7 +7,7 @@ class Cliente:
         self.ip = ip
         self.puerto = port
         self.servidor = socket.socket()
-
+        self.running = True  
                     
 
     def conectar(self):
@@ -21,5 +21,11 @@ class Cliente:
         print("Mensaje enviado")
         
     def recibir(self):
-        data = self.servidor.recv(1024).decode()
-        print(data)
+        while self.running:
+            message = self.servidor.recv(1024).decode() #Recibe el nuevo mensaje
+            if not message == "":
+                print(message)
+                print(type(json.loads(message)))
+                self.running = False
+        self.running = True
+        return json.loads(message)
