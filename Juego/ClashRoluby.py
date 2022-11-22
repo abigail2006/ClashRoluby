@@ -122,6 +122,12 @@ class Pantalla:
         self.etiqueta7.config (text = f"IP: {self.modo.MiIP}")
         self.etiqueta8.config (text = f"Puerto: {self.modo.Port}")
         self.modo.abrir_conexion()
+        cartaJ2 = {"url": self.j2.url_final,
+                   "danio": self.j2.danio,
+                   "vida": self.j2.vida,
+                   "velocidad":self.j2.velocidad,
+                   "nombre":self.j2.nombre}
+        self.modo.enviar(cartaJ2)
         
     def crear_cliente(self):
         self.IPentry = tkinter.Entry(self.f3)
@@ -138,8 +144,23 @@ class Pantalla:
         if ip and puerto:
             self.modo = Cliente(ip, puerto)
             self.modo.conectar()
+            self.mensaje = self.modo.recibir()
+            self.reconfigurar()
         else:
             print("ingrese ip y puerto")
+    
+    def reconfigurar(self):
+        self.etiqueta1.config(text = f'NOMBRE: {self.mensaje["nombre"]}')
+        self.etiqueta2.config(text = f'DAÑO: {self.mensaje["danio"]}')
+        self.etiqueta3.config(text = f'VIDA: {self.mensaje["vida"]}')
+        self.etiqueta4.config(text = f'VELOCIDAD: {self.mensaje["velocidad"]}')
+        #self.etiqueta5.config(text = f'PUNTOS: {self.j1.puntos}')<------------------------??????
+        #self.etiqueta6.config(text = f'MENSAJE: {respuesta["mensaje"]}')
+        req = Request(self.mensaje["url"], headers={'User-Agent': 'Mozilla/5.0'})
+        raw_data = urlopen(req).read()
+        p = ImageTk.PhotoImage(data=raw_data)
+        self.l1.config(image=p)
+        self.boton4.config(state=tkinter.DISABLED)
     
 class Jugador:
     def __init__(self):

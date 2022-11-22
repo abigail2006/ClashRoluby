@@ -14,8 +14,9 @@ class Servidor:
         self.running = True        
     
     def enviar(self, data):
-        self.clientsocket.send(data.encode());
-        pass
+        mensJson = json.dumps(data)
+        self.clientsocket.send(mensJson.encode());
+        
     
     def recibir(self):
         while self.running:
@@ -27,6 +28,7 @@ class Servidor:
                 print(json.loads(message)[0])
                 self.running = False
         self.running = True
+        return json.loads(message)
     
     def abrir_conexion(self):
         servidor_abierto = socket.socket()
